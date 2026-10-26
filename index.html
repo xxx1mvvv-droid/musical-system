@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="z.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zlarp</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 450px;
+            padding: 30px;
+            transition: all 0.3s ease;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #333;
+            font-size: 28px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+        }
+        
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        textarea {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        
+        input:focus,
+        textarea:focus {
+            border-color: #4a86e8;
+            outline: none;
+        }
+        
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(to right, #4776E6, #8E54E9);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(142, 84, 233, 0.3);
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(142, 84, 233, 0.4);
+        }
+        
+        .secondary-btn {
+            background: linear-gradient(to right, #FF512F, #DD2476);
+            box-shadow: 0 4px 10px rgba(221, 36, 118, 0.3);
+        }
+        
+        .secondary-btn:hover {
+            box-shadow: 0 6px 15px rgba(221, 36, 118, 0.4);
+        }
+        
+        .link-btn {
+            background: none;
+            color: #4776E6;
+            text-decoration: underline;
+            padding: 0;
+            width: auto;
+            box-shadow: none;
+            font-weight: 500;
+        }
+        
+        .link-btn:hover {
+            background: none;
+            color: #3556b3;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .error {
+            color: #e53935;
+            font-size: 14px;
+            margin-top: 5px;
+            display: block;
+            min-height: 20px;
+        }
+        
+        .success {
+            color: #43a047;
+            font-size: 14px;
+            margin-top: 5px;
+            display: block;
+            min-height: 20px;
+        }
+        
+        .form-toggle {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .user-info {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        
+        .user-info h2 {
+            color: #4776E6;
+            margin-bottom: 10px;
+        }
+        
+        .download-btn {
+            background: linear-gradient(to right, #00b09b, #96c93d);
+            box-shadow: 0 4px 10px rgba(0, 176, 155, 0.3);
+        }
+        
+        .download-btn:hover {
+            box-shadow: 0 6px 15px rgba(0, 176, 155, 0.4);
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Tela de Login -->
+        <div id="login-form">
+            <h1>Login na Zlarp</h1>
+            <form id="login">
+                <div class="form-group">
+                    <label for="login-identifier">Nome de usuário ou E-mail</label>
+                    <input type="text" id="login-identifier" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Senha</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit">Entrar</button>
+                <div class="error" id="login-error"></div>
+            </form>
+            <button class="link-btn" id="forgot-password-btn">Esqueci minha senha</button>
+            <div class="form-toggle">
+                <p>Não tem uma conta? <button class="link-btn" id="show-register">Cadastre-se</button></p>
+            </div>
+        </div>
+
+        <!-- Tela de Cadastro -->
+        <div id="register-form" class="hidden">
+            <h1>Cadastro na Zlarp</h1>
+            <form id="register">
+                <div class="form-group">
+                    <label for="register-username">Nome de usuário</label>
+                    <input type="text" id="register-username" required>
+                    <div class="error" id="username-error"></div>
+                </div>
+                <div class="form-group">
+                    <label for="register-fullname">Nome completo</label>
+                    <input type="text" id="register-fullname" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-email">E-mail</label>
+                    <input type="email" id="register-email" required>
+                    <div class="error" id="email-error"></div>
+                </div>
+                <div class="form-group">
+                    <label for="register-password">Senha</label>
+                    <input type="password" id="register-password" required>
+                    <div class="error" id="password-error"></div>
+                </div>
+                <div class="form-group">
+                    <label for="register-confirm-password">Confirmar senha</label>
+                    <input type="password" id="register-confirm-password" required>
+                    <div class="error" id="confirm-password-error"></div>
+                </div>
+                <button type="submit">Cadastrar</button>
+                <div class="success" id="register-success"></div>
+            </form>
+            <div class="form-toggle">
+                <p>Já tem uma conta? <button class="link-btn" id="show-login">Faça login</button></p>
+            </div>
+        </div>
+
+        <!-- Tela de Recuperação de Senha -->
+        <div id="recover-form" class="hidden">
+            <h1>Recuperar Senha</h1>
+            <form id="recover">
+                <div class="form-group">
+                    <label for="recover-email">E-mail</label>
+                    <input type="email" id="recover-email" required>
+                </div>
+                <button type="submit">Recuperar Senha</button>
+                <div class="error" id="recover-error"></div>
+                <div class="success" id="recover-success"></div>
+            </form>
+            <div class="form-toggle">
+                <p>Lembrou sua senha? <button class="link-btn" id="show-login-from-recover">Faça login</button></p>
+            </div>
+        </div>
+
+        <!-- Área Logada -->
+        <div id="logged-area" class="hidden">
+            <div class="user-info">
+                <h2>Bem-vindo, <span id="user-fullname"></span>!</h2>
+                <p>Usuário: <span id="user-username"></span></p>
+                <p>E-mail: <span id="user-email"></span></p>
+            </div>
+            
+            <div class="form-group">
+                <label for="user-description">Sua descrição:</label>
+                <textarea id="user-description" rows="5" placeholder="Escreva algo sobre você..."></textarea>
+            </div>
+            <button id="save-description">Salvar Descrição</button>
+            <button class="download-btn" id="download-data">Baixar Meus Dados</button>
+            <button class="secondary-btn" id="logout">Sair</button>
+            <div class="success" id="save-success"></div>
+        </div>
+    </div>
+
+    <script>
+        // Elementos do DOM
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        const recoverForm = document.getElementById('recover-form');
+        const loggedArea = document.getElementById('logged-area');
+        
+        // Botões de navegação
+        document.getElementById('show-register').addEventListener('click', () => showForm(registerForm));
+        document.getElementById('show-login').addEventListener('click', () => showForm(loginForm));
+        document.getElementById('forgot-password-btn').addEventListener('click', () => showForm(recoverForm));
+        document.getElementById('show-login-from-recover').addEventListener('click', () => showForm(loginForm));
+        document.getElementById('logout').addEventListener('click', logout);
+        document.getElementById('save-description').addEventListener('click', saveDescription);
+        document.getElementById('download-data').addEventListener('click', downloadUserData);
+
+        // Formulários
+        document.getElementById('login').addEventListener('submit', handleLogin);
+        document.getElementById('register').addEventListener('submit', handleRegister);
+        document.getElementById('recover').addEventListener('submit', handleRecover);
+
+        // Validação em tempo real para o formulário de registro
+        document.getElementById('register-username').addEventListener('blur', validateUsername);
+        document.getElementById('register-email').addEventListener('blur', validateEmail);
+        document.getElementById('register-password').addEventListener('blur', validatePassword);
+        document.getElementById('register-confirm-password').addEventListener('blur', validateConfirmPassword);
+
+        // Função para mostrar um formulário e esconder os outros
+        function showForm(formToShow) {
+            [loginForm, registerForm, recoverForm, loggedArea].forEach(form => {
+                form.classList.add('hidden');
+            });
+            formToShow.classList.remove('hidden');
+            clearMessages();
+        }
+
+        // Limpar mensagens de erro
+        function clearMessages() {
+            document.querySelectorAll('.error, .success').forEach(el => {
+                el.textContent = '';
+            });
+        }
+
+        // Função para lidar com o login
+        function handleLogin(e) {
+            e.preventDefault();
+            const identifier = document.getElementById('login-identifier').value;
+            const password = document.getElementById('login-password').value;
+            const errorElement = document.getElementById('login-error');
+            
+            // Buscar usuários do localStorage
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const user = users.find(u => (u.username === identifier || u.email === identifier) && u.password === password);
+            
+            if (user) {
+                // Login bem-sucedido
+                sessionStorage.setItem('loggedUser', JSON.stringify(user));
+                showUserArea(user);
+            } else {
+                errorElement.textContent = 'Usuário/e-mail ou senha incorretos.';
+            }
+        }
+
+        // Função para lidar com o cadastro
+        function handleRegister(e) {
+            e.preventDefault();
+            const username = document.getElementById('register-username').value;
+            const fullname = document.getElementById('register-fullname').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('register-confirm-password').value;
+            
+            const successElement = document.getElementById('register-success');
+            
+            // Validações finais
+            if (!validateUsername() || !validateEmail() || !validatePassword() || !validateConfirmPassword()) {
+                return;
+            }
+            
+            // Buscar usuários existentes
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            
+            // Criar novo usuário
+            const newUser = {
+                username,
+                fullname,
+                email,
+                password
+            };
+            
+            // Adicionar usuário ao array
+            users.push(newUser);
+            
+            // Salvar no localStorage
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            // Criar arquivo de descrições se não existir
+            if (!localStorage.getItem('descriptions')) {
+                localStorage.setItem('descriptions', JSON.stringify([]));
+            }
+            
+            successElement.textContent = 'Cadastro realizado com sucesso!';
+            
+            // Limpar formulário
+            document.getElementById('register').reset();
+            
+            // Mostrar formulário de login após 2 segundos
+            setTimeout(() => showForm(loginForm), 2000);
+        }
+
+        // Função para lidar com a recuperação de senha
+        function handleRecover(e) {
+            e.preventDefault();
+            const email = document.getElementById('recover-email').value;
+            const errorElement = document.getElementById('recover-error');
+            const successElement = document.getElementById('recover-success');
+            
+            // Buscar usuário pelo e-mail
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const user = users.find(u => u.email === email);
+            
+            if (user) {
+                successElement.textContent = `Email enviado para ${email} com instruções para redefinir sua senha.`;
+                errorElement.textContent = '';
+            } else {
+                errorElement.textContent = 'E-mail não encontrado.';
+                successElement.textContent = '';
+            }
+        }
+
+        // Função para mostrar a área do usuário
+        function showUserArea(user) {
+            document.getElementById('user-fullname').textContent = user.fullname;
+            document.getElementById('user-username').textContent = user.username;
+            document.getElementById('user-email').textContent = user.email;
+            
+            // Carregar descrição se existir
+            const descriptions = JSON.parse(localStorage.getItem('descriptions') || '[]');
+            const userDescription = descriptions.find(d => d.username === user.username);
+            
+            if (userDescription) {
+                document.getElementById('user-description').value = userDescription.text;
+            } else {
+                document.getElementById('user-description').value = '';
+            }
+            
+            showForm(loggedArea);
+        }
+
+        // Função para salvar a descrição do usuário
+        function saveDescription() {
+            const loggedUser = JSON.parse(sessionStorage.getItem('loggedUser'));
+            const description = document.getElementById('user-description').value;
+            const successElement = document.getElementById('save-success');
+            
+            if (!loggedUser) {
+                showForm(loginForm);
+                return;
+            }
+            
+            // Buscar descrições existentes
+            const descriptions = JSON.parse(localStorage.getItem('descriptions') || '[]');
+            
+            // Verificar se já existe uma descrição para este usuário
+            const existingIndex = descriptions.findIndex(d => d.username === loggedUser.username);
+            
+            if (existingIndex !== -1) {
+                // Atualizar descrição existente
+                descriptions[existingIndex].text = description;
+            } else {
+                // Adicionar nova descrição
+                descriptions.push({
+                    username: loggedUser.username,
+                    text: description
+                });
+            }
+            
+            // Salvar no localStorage
+            localStorage.setItem('descriptions', JSON.stringify(descriptions));
+            
+            successElement.textContent = 'Descrição salva com sucesso!';
+            setTimeout(() => {
+                successElement.textContent = '';
+            }, 3000);
+        }
+
+        // Função para baixar os dados do usuário
+        function downloadUserData() {
+            const loggedUser = JSON.parse(sessionStorage.getItem('loggedUser'));
+            const descriptions = JSON.parse(localStorage.getItem('descriptions') || '[]');
+            const userDescription = descriptions.find(d => d.username === loggedUser.username);
+            
+            const userData = {
+                usuario: loggedUser.username,
+                nome: loggedUser.fullname,
+                email: loggedUser.email,
+                descricao: userDescription ? userDescription.text : ''
+            };
+            
+            // Criar conteúdo para o arquivo
+            const content = `Dados do Usuário:\n\nUsuário: ${userData.usuario}\nNome: ${userData.nome}\nEmail: ${userData.email}\nDescrição: ${userData.descricao}`;
+            
+            // Criar blob e link para download
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `dados_${userData.usuario}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Função para logout
+        function logout() {
+            sessionStorage.removeItem('loggedUser');
+            showForm(loginForm);
+        }
+
+        // Funções de validação
+        function validateUsername() {
+            const username = document.getElementById('register-username').value;
+            const errorElement = document.getElementById('username-error');
+            
+            if (username.length < 3) {
+                errorElement.textContent = 'O nome de usuário deve ter pelo menos 3 caracteres.';
+                return false;
+            }
+            
+            // Verificar se o usuário já existe
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            if (users.some(u => u.username === username)) {
+                errorElement.textContent = 'Este nome de usuário já está em uso.';
+                return false;
+            }
+            
+            errorElement.textContent = '';
+            return true;
+        }
+        
+        function validateEmail() {
+            const email = document.getElementById('register-email').value;
+            const errorElement = document.getElementById('email-error');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            
+            if (!emailRegex.test(email)) {
+                errorElement.textContent = 'Por favor, insira um e-mail válido.';
+                return false;
+            }
+            
+            // Verificar se o e-mail já existe
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            if (users.some(u => u.email === email)) {
+                errorElement.textContent = 'Este e-mail já está cadastrado.';
+                return false;
+            }
+            
+            errorElement.textContent = '';
+            return true;
+        }
+        
+        function validatePassword() {
+            const password = document.getElementById('register-password').value;
+            const errorElement = document.getElementById('password-error');
+            
+            if (password.length < 6) {
+                errorElement.textContent = 'A senha deve ter pelo menos 6 caracteres.';
+                return false;
+            }
+            
+            errorElement.textContent = '';
+            return true;
+        }
+        
+        function validateConfirmPassword() {
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('register-confirm-password').value;
+            const errorElement = document.getElementById('confirm-password-error');
+            
+            if (password !== confirmPassword) {
+                errorElement.textContent = 'As senhas não coincidem.';
+                return false;
+            }
+            
+            errorElement.textContent = '';
+            return true;
+        }
+
+        // Verificar se o usuário já está logado ao carregar a página
+        window.addEventListener('load', () => {
+            const loggedUser = sessionStorage.getItem('loggedUser');
+            if (loggedUser) {
+                showUserArea(JSON.parse(loggedUser));
+            }
+        });
+    </script>
+</body>
+</html>
